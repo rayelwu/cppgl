@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++17")
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src/ )
 
 # 添加头文件
-set(HEADER_DIR ${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/src/)
+set(HEADER_DIR ${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/src/ ${PROJECT_SOURCE_DIR}/src/loader ${PROJECT_SOURCE_DIR}/src/model)
 set(LIB_DIR ${PROJECT_SOURCE_DIR}/lib/)
 include_directories(${HEADER_DIR} ${LIB_DIR})
 

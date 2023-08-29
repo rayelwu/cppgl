@@ -45,7 +45,7 @@ int main()
         return -1;
     }
 
-    Shader defaultShader("vertex.glsl", "fragment.glsl");
+    Shader defaultShader("../res/vertex.glsl", "../res/fragment.glsl");
 
     // 设置顶点
     float vertices[] = {
