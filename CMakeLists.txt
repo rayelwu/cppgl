@@ -11,7 +11,23 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++17")
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src/ )
 
 # 添加头文件
-set(HEADER_DIR ${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/src/ ${PROJECT_SOURCE_DIR}/src/loader ${PROJECT_SOURCE_DIR}/src/model)
+set(HEADER_DIR 
+    ${PROJECT_SOURCE_DIR}/include/ 
+    ${PROJECT_SOURCE_DIR}/src/ 
+    ${PROJECT_SOURCE_DIR}/src/loader 
+    ${PROJECT_SOURCE_DIR}/src/model
+    ${PROJECT_SOURCE_DIR}/src/renderer
+)
+
+set(SOURCES 
+    ${SRC_DIR}glad.c 
+    ${SRC_DIR}/shader/Shader.cpp
+    ${SRC_DIR}/renderer/Renderer.cpp
+    ${SRC_DIR}/model/RawModel.cpp
+    ${SRC_DIR}/loader/Loader.cpp
+    ${SRC_DIR}/main.cpp
+)
+
 set(LIB_DIR ${PROJECT_SOURCE_DIR}/lib/)
 include_directories(${HEADER_DIR} ${LIB_DIR})
 
@@ -19,9 +35,6 @@ include_directories(${HEADER_DIR} ${LIB_DIR})
 #set(GLFW_LINK ${LIB_DIR}libglfw3.a)
 #link_libraries(${GLFW_LINK})
 link_directories(${LIB_DIR})
-
-# 执行编译命令
-set(SOURCES ${SRC_DIR}glad.c ${SRC_DIR}main.cpp ${SRC_DIR}/shader/Shader.cpp)
 add_executable(CppGL ${SOURCES})
 
 # 链接系统的 OpenGL 框架

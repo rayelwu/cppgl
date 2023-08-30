@@ -11,7 +11,8 @@ class RawModel
 public:
 
     GLuint vao;
-    RawModel();
+    GLsizei vertexCount;
+    RawModel(GLuint, GLsizei);
     ~RawModel();
 
 private:

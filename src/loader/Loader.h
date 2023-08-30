@@ -12,11 +12,13 @@ public:
     Loader();
     ~Loader();
 
-    RawModel *load(GLfloat *, int);
+    RawModel *load(GLfloat *postions, GLfloat *colours, GLint *indices);
+    RawModel *loadCube(GLfloat *postions, GLfloat *colours, GLint *indices);
     std::vector<GLuint> vaos;
     std::vector<GLuint> vbos;
 
 private:
+    GLuint createVertexBuffer(GLenum target, const void* vertexArray, int vertexCount, int vertexStride);
 };
 
 #endif

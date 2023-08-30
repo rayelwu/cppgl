@@ -15,7 +15,7 @@ public:
     ~Shader();
     
     void Use();
-
+    void setUniform1f(const GLchar *name, GLfloat v0);
 private:
 };
 
