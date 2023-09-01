@@ -22,11 +22,11 @@ link_directories(${LIB_DIR})
 
 # 执行编译命令
 set(SOURCES ${SRC_DIR}glad.c ${SRC_DIR}main.cpp ${SRC_DIR}/shader/Shader.cpp)
-add_executable(HelloGL ${SOURCES})
+add_executable(CppGL ${SOURCES})
 
 # 链接系统的 OpenGL 框架
 if (APPLE)
-    target_link_libraries(HelloGL "-framework OpenGL")
+    target_link_libraries(CppGL "-framework OpenGL")
 endif()
 
 include(CTest)
@@ -35,4 +35,4 @@ enable_testing()
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
-target_link_libraries(HelloGL glfw3)
+target_link_libraries(CppGL glfw3)
