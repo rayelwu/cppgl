@@ -3,14 +3,19 @@
 
 #pragma once
 
+#include "model/RawModel.h"
+#include "shader/Shader.h"
+
 class Renderer
 {
 public:
-    Renderer();
+    Shader* shader;
+    Renderer(Shader *);
     ~Renderer();
+    void render(RawModel *model);
+    void clear();
 
 private:
-
 };
 
 #endif

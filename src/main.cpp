@@ -5,6 +5,9 @@
 #include <fstream>
 #include <cmath>
 #include <shader/Shader.h>
+#include <loader/Loader.h>
+#include <renderer/Renderer.h>
+#include <model/RawModel.h>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -45,42 +48,27 @@ int main()
         return -1;
     }
 
-    Shader defaultShader("../res/vertex.glsl", "../res/fragment.glsl");
-
     // 设置顶点
-    float vertices[] = {
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
-        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,   // top
+    float postions[] = {
+        0.5f, -0.5f, 0.0f, 
+        -0.5f, -0.5f, 0.0f, 
+        -0.5f, 0.5f, 0.0f, 
+        0.5f, 0.5f, 0.0f, 
     };
-    // 创建一个VAO——顶点数组对象(Vertex Array Object, VAO)
-    //         VAO可以像顶点缓冲对象那样被绑定，任何随后的顶点属性调用都会储存在这个VAO中。
-    // 创建VBO——顶点缓冲对象：Vertex Buffer Object，VBO
-    //         它会在GPU内存（通常被称为显存）中储存大量顶点。
-    //         使用这些缓冲对象的好处是我们可以一次性的发送一大批数据到显卡上，而不是每个顶点发送一次。
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    // 1.绑定VOA
-    glBindVertexArray(VAO);
-    // 2.把顶点数组复制到缓冲中供OpenGL使用
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    float colours[] = {
+        1.0f, 0.0f, 0.0f, 
+        0.0f, 1.0f, 0.0f, 
+        0.0f, 0.0f, 1.0f, 
+        1.0f, 0.0f, 0.0f, 
+    };
+    int indices[] = {0,1,2,3,0,2};
 
-    /*
-    GL_STATIC_DRAW ：数据不会或几乎不会改变。
-    GL_DYNAMIC_DRAW：数据会被改变很多。
-    GL_STREAM_DRAW ：数据每次绘制时都会改变。
-    */
-
-    // 3.设置顶点属性指针
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)(3 * sizeof(GLfloat)));
-
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(VAO);
+    
+    Loader loader;
+    Shader shader("../res/vertex.glsl", "../res/fragment.glsl");
+    Renderer renderer(&shader);
+    RawModel* model = loader.load(postions, colours, indices);
+    
 
     // 循环渲染
     // -----------
@@ -88,46 +76,17 @@ int main()
     {
         // 输入
         processInput(window);
-
-        // 渲染
-        // 清楚颜色缓冲
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // 记得激活着色器
-        defaultShader.Use();
-
-        // 更新uniform，然后每个渲染迭代都更新这个uniform：
-        /*
-        首先我们通过glfwGetTime()获取运行的秒数。
-        然后我们使用sin函数让颜色在0.0到1.0之间改变，
-        最后将结果储存到greenValue里。
-        */
-        float timeValue = glfwGetTime();
-        float alphaValue = sin(timeValue) / 2.0f + 0.5f;
-        /*
-        用glGetUniformLocation查询uniform ourColor的位置值。
-        如果glGetUniformLocation返回-1就代表没有找到这个位置值。
-
-        注意，查询uniform地址不要求你之前使用过着色器程序，
-        但是更新一个uniform之前你必须先使用程序（调用glUseProgram)，
-        因为它是在当前激活的着色器程序中设置uniform的。
-        */
-        // int vertexColorLocation = glGetUniformLocation(shaderProgram, "aColor");
-        //  最后，我们可以通过glUniform4f函数设置uniform值。
-        glUniform1f(glGetUniformLocation(defaultShader.Program, "aAplha"), alphaValue);
-
-        // 绘制三角形
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
+        renderer.clear();
+        shader.setUniform1f("aAplha", sin(glfwGetTime()) / 2.0f + 0.5f);
+        renderer.render(model);
         // 交换缓冲并查询IO事件
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
     // 取消分配的空间
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    // glDeleteVertexArrays(1, &VAO);
+    // glDeleteBuffers(1, &VBO);
 
     // 终止，清除所有先前分配的GLFW资源。
     glfwTerminate();

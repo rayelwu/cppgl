@@ -82,6 +82,9 @@ Shader::Shader(const GLchar *vertexPath, const GLchar *fragmentPath)
                   << infoLog << std::endl;
     }
 
+   std::cout << "SUCCESS::SHADER::PROGRAM::LINKING_SUCCESS" << std::endl;
+
+
     // 删除着色器，它们已经链接到我们的程序中了，已经不再需要了
     glDeleteShader(vertex);
     glDeleteShader(fragment);
@@ -93,5 +96,11 @@ Shader::~Shader()
 
 void Shader::Use()
 {
+   // std::cout<<"Use Program: " << this->Program << std::endl;
     glUseProgram(this->Program);
+}
+
+void Shader::setUniform1f(const GLchar *name, GLfloat v0)
+{
+    glUniform1f(glGetUniformLocation(this->Program, name), v0);
 }
