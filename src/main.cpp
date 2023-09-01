@@ -8,6 +8,9 @@
 #include <loader/Loader.h>
 #include <renderer/Renderer.h>
 #include <model/RawModel.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -63,13 +66,19 @@ int main()
     };
     int indices[] = {0,1,2,3,0,2};
 
-    
+
     Loader loader;
     Shader shader("../res/vertex.glsl", "../res/fragment.glsl");
     Renderer renderer(&shader);
     RawModel* model = loader.load(postions, colours, indices);
     
 
+    glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+    glm::mat4 trans;
+    
+    //trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+    //vec = trans * vec;
+    std::cout << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << std::endl;
     // 循环渲染
     // -----------
     while (!glfwWindowShouldClose(window))
