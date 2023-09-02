@@ -3,6 +3,10 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/ext/matrix_float4x4.hpp>
 
 Shader::Shader(const GLchar *vertexPath, const GLchar *fragmentPath)
 {
@@ -82,8 +86,7 @@ Shader::Shader(const GLchar *vertexPath, const GLchar *fragmentPath)
                   << infoLog << std::endl;
     }
 
-   std::cout << "SUCCESS::SHADER::PROGRAM::LINKING_SUCCESS" << std::endl;
-
+    std::cout << "SUCCESS::SHADER::PROGRAM::LINKING_SUCCESS" << std::endl;
 
     // 删除着色器，它们已经链接到我们的程序中了，已经不再需要了
     glDeleteShader(vertex);
@@ -96,11 +99,17 @@ Shader::~Shader()
 
 void Shader::Use()
 {
-   // std::cout<<"Use Program: " << this->Program << std::endl;
+    // std::cout<<"Use Program: " << this->Program << std::endl;
     glUseProgram(this->Program);
 }
 
 void Shader::setUniform1f(const GLchar *name, GLfloat v0)
 {
     glUniform1f(glGetUniformLocation(this->Program, name), v0);
+}
+
+void Shader::setUniformMatrix4fv(const GLchar *name, glm::mat4 trans)
+{
+    unsigned int transformLoc = glGetUniformLocation(this->Program, "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 }

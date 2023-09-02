@@ -17,6 +17,10 @@ set(HEADER_DIR
     ${PROJECT_SOURCE_DIR}/src/loader 
     ${PROJECT_SOURCE_DIR}/src/model
     ${PROJECT_SOURCE_DIR}/src/renderer
+    ${PROJECT_SOURCE_DIR}/src/window
+    ${PROJECT_SOURCE_DIR}/src/scene
+    ${PROJECT_SOURCE_DIR}/src/app
+    ${PROJECT_SOURCE_DIR}/src/event
 )
 
 set(SOURCES 
@@ -25,7 +29,11 @@ set(SOURCES
     ${SRC_DIR}/renderer/Renderer.cpp
     ${SRC_DIR}/model/RawModel.cpp
     ${SRC_DIR}/loader/Loader.cpp
+    ${SRC_DIR}/window/Window.cpp
+    ${SRC_DIR}/scene/Scene.cpp
+    ${SRC_DIR}/app/App.cpp
     ${SRC_DIR}/main.cpp
+    
 )
 
 set(LIB_DIR ${PROJECT_SOURCE_DIR}/lib/)
