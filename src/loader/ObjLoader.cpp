@@ -23,11 +23,12 @@ RawModel *ObjLoader::load(std::string fileName, Loader *loader)
     {
         objFile.open(fileName);
         std::string line;
-        while (std::getline(objFile, line))
-        {
+        // TODO
+        // while (std::getline(objFile, line))
+        // {
             
-            std::cout << line << std::endl;
-        }
+        //     std::cout << line << std::endl;
+        // }
     }
     catch (std::ifstream::failure e)
     {

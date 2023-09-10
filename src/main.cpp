@@ -165,8 +165,8 @@ private:
             3,
             6,
         };
-        ObjLoader ObjLoader;
-        ObjLoader.load("../res/dragon.obj", &this->loader);
+        //ObjLoader ObjLoader;
+        //ObjLoader.load("../res/dragon.obj", &this->loader);
         return this->loader.load(pos, colours, indices);
     }
 
