@@ -5,6 +5,7 @@
 
 #include "model/RawModel.h"
 #include <vector>
+#include <iostream>
 
 class Loader
 {
@@ -12,13 +13,8 @@ public:
     Loader();
     ~Loader();
 
-    RawModel *load(GLfloat *postions, GLfloat *colours, GLint *indices);
-    RawModel *loadCube(GLfloat *postions, GLfloat *colours, GLint *indices);
-    std::vector<GLuint> vaos;
-    std::vector<GLuint> vbos;
-
-private:
-    GLuint createVertexBuffer(GLenum target, const void* vertexArray, int vertexCount, int vertexStride);
+    RawModel *load(std::vector<float> &postions, std::vector<float> &colours, std::vector<int> &indices);
+    RawModel *load(GLfloat *postions, int posLen, GLfloat *colours, int colourLen, GLint *indices, int idxLen);
 };
 
 #endif

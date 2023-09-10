@@ -110,6 +110,10 @@ void Shader::setUniform1f(const GLchar *name, GLfloat v0)
 
 void Shader::setUniformMatrix4fv(const GLchar *name, glm::mat4 trans)
 {
-    unsigned int transformLoc = glGetUniformLocation(this->Program, "transform");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+    glUniformMatrix4fv(glGetUniformLocation(this->Program, name), 1, GL_FALSE, glm::value_ptr(trans));
+}
+
+void Shader::setUniform3f(const GLchar *name, glm::vec3 vec)
+{
+    glUniform3fv(glGetUniformLocation(this->Program, name), 1, &vec[0]);
 }

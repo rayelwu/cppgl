@@ -21,6 +21,7 @@ set(HEADER_DIR
     ${PROJECT_SOURCE_DIR}/src/scene
     ${PROJECT_SOURCE_DIR}/src/app
     ${PROJECT_SOURCE_DIR}/src/event
+    ${PROJECT_SOURCE_DIR}/src/camera
 )
 
 set(SOURCES 
@@ -29,9 +30,11 @@ set(SOURCES
     ${SRC_DIR}/renderer/Renderer.cpp
     ${SRC_DIR}/model/RawModel.cpp
     ${SRC_DIR}/loader/Loader.cpp
+    ${SRC_DIR}/loader/ObjLoader.cpp
     ${SRC_DIR}/window/Window.cpp
     ${SRC_DIR}/scene/Scene.cpp
     ${SRC_DIR}/app/App.cpp
+    ${SRC_DIR}/camera/Camera.cpp
     ${SRC_DIR}/main.cpp
     
 )

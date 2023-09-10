@@ -14,6 +14,10 @@ public:
 
     ~App();
 
+    float deltaTime;
+    
+    float lastFrame;
+
     Window *currentWindow;
 
     Window *createWindow(std::string title, int width, int height);
@@ -26,8 +30,9 @@ public:
 
 public:
     static void onGlfwResize(GLFWwindow *window, int width, int height);
-
-     void onGlfwInput(GLFWwindow *window);
+    static int winWidth;
+    static int winHeight;
+    void onGlfwInput(GLFWwindow *window);
 
 private:
 };

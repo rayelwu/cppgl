@@ -29,7 +29,13 @@ void Window::addScene(std::string sceneTitle, Scene *scene)
 {
     if (this->scenes.size() == 0)
     {
+
         this->currentScene = scene;
+        if (!this->currentScene)
+        {
+            this->currentScene->window = nullptr;
+        }
+        this->currentScene->window = this;
     }
     this->scenes[sceneTitle] = scene;
 }

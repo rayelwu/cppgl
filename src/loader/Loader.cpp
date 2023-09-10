@@ -2,95 +2,77 @@
 #include <iostream>
 Loader::Loader()
 {
-
 }
 
 Loader::~Loader()
 {
-    for (size_t i = 0; i < vaos.size(); i++)
-    {
-        glDeleteVertexArrays(1,&vaos[i]);
-    }
-    for (size_t i = 0; i < vbos.size(); i++)
-    {
-        glDeleteBuffers(1, &vbos[i]);
-    }
 }
 
-
-GLuint Loader::createVertexBuffer(GLenum target, const void* vertexArray, int vertexCount, int vertexStride) {
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(target, vbo);
-    glBufferData(target, vertexCount * vertexStride * sizeof(GLfloat), vertexArray, GL_STATIC_DRAW);
-    GLint vboid = this->vbos.size();
-    glVertexAttribPointer(vboid, vertexCount, GL_FLOAT, false, vertexStride * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(vboid);
-    this->vbos.push_back(vbo);
-    return vbo;
-}
-
-
-
-RawModel *Loader::load(GLfloat *postions, GLfloat *colours, GLint *indices)
+template <typename T>
+T *vec2arr(std::vector<T> vec)
 {
-    
-    //RawModel* model = new RawModel();
-    GLuint vao,vbo;
+    T *arr = (T *)malloc(sizeof(T) * vec.size());
+    std::copy(vec.begin(), vec.end(), arr);
+    return arr;
+}
+
+template <typename T>
+void debug(T *postions, int posLen)
+{
+    std::cout << "Length: " << posLen << std::endl;
+    for (size_t i = 0; i < posLen; i++)
+    {
+        std::cout << postions[i] << ", ";
+    }
+    std::cout << std::endl;
+}
+
+RawModel *Loader::load(std::vector<float> &postions, std::vector<float> &colours, std::vector<int> &indices)
+{
+    return this->load(
+        vec2arr(postions), postions.size(),
+        vec2arr(colours), colours.size(),
+        vec2arr(indices), indices.size());
+}
+
+RawModel *Loader::load(GLfloat *postions, int posLen, GLfloat *colors, int colourLen, GLint *indices, int idxLen)
+{
+    GLuint vao, vbo;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    // glGenBuffers(1, &vbo);
-    // glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    // glBufferData(GL_ARRAY_BUFFER, length * sizeof(GLfloat), vertexArray, GL_STATIC_DRAW);
-    // glVertexAttribPointer(0, vertexCount, GL_FLOAT, false, 6 * sizeof(GLfloat), (GLvoid*)0);
-    // glEnableVertexAttribArray(0);
-    this->createVertexBuffer(GL_ARRAY_BUFFER, postions, 4, 3);
-    this->createVertexBuffer(GL_ARRAY_BUFFER, colours, 4, 3);
-    this->createVertexBuffer(GL_ELEMENT_ARRAY_BUFFER, indices, 6, 1);
+    debug(postions, posLen);
+    debug(colors, colourLen);
+    debug(indices, idxLen);
 
-    // glVertexAttribPointer(1, vertexCount, GL_FLOAT, false, 6 * sizeof(GLfloat), (GLvoid*) (3 * sizeof(GLfloat)));
-    // glEnableVertexAttribArray(1);
-
-    glBindVertexArray(vao);
-
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)(3 * sizeof(GLfloat)));
-
-    this->vaos.push_back(vao);
-
-    return new RawModel(vao, 6);
-}
-
-
-
-
-RawModel *Loader::loadCube(GLfloat *postions, GLfloat *colours, GLint *indices)
-{
+    // load postions
+    GLuint position;
     
-    //RawModel* model = new RawModel();
-    GLuint vao,vbo;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    glGenBuffers(1, &position);
+    glBindBuffer(GL_ARRAY_BUFFER, position);
+    glBufferData(GL_ARRAY_BUFFER, posLen * sizeof(GLfloat), postions, GL_STATIC_DRAW);
 
-    // glGenBuffers(1, &vbo);
-    // glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    // glBufferData(GL_ARRAY_BUFFER, length * sizeof(GLfloat), vertexArray, GL_STATIC_DRAW);
-    // glVertexAttribPointer(0, vertexCount, GL_FLOAT, false, 6 * sizeof(GLfloat), (GLvoid*)0);
-    // glEnableVertexAttribArray(0);
-    this->createVertexBuffer(GL_ARRAY_BUFFER, postions, 8, 3);
-    this->createVertexBuffer(GL_ARRAY_BUFFER, colours, 8, 3);
-    this->createVertexBuffer(GL_ELEMENT_ARRAY_BUFFER, indices, 36, 1);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, (GLvoid *)0);
+    glEnableVertexAttribArray(0);
+    
 
-    // glVertexAttribPointer(1, vertexCount, GL_FLOAT, false, 6 * sizeof(GLfloat), (GLvoid*) (3 * sizeof(GLfloat)));
-    // glEnableVertexAttribArray(1);
+    // load colors
+    GLuint color;
+    glGenBuffers(1, &color);
+    glBindBuffer(GL_ARRAY_BUFFER, color);
+    glBufferData(GL_ARRAY_BUFFER, colourLen * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, (GLvoid *)0);
+    glEnableVertexAttribArray(1);
 
-    glBindVertexArray(vao);
+    // load indices
+    GLuint idx;
+    glGenBuffers(1, &idx);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, idxLen * sizeof(GLint), indices, GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)(3 * sizeof(GLfloat)));
-
-    this->vaos.push_back(vao);
-
-    return new RawModel(vao, 36);
+    return new RawModel(vao, idxLen);
 }

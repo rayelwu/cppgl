@@ -21,6 +21,7 @@ public:
     void Use();
     void setUniform1f(const GLchar *name, GLfloat v0);
     void setUniformMatrix4fv(const GLchar *name, glm::mat4 trans);
+    void setUniform3f(const GLchar *name, glm::vec3 vec);
 
 private:
 };

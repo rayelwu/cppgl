@@ -1,17 +1,14 @@
 #include "App.h"
 #include <iostream>
-
+#include <functional>
 App::App()
 {
-    // 初始化glfw
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    // 条件编译语句，如果是苹果系统？
 #ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 }
 
@@ -21,6 +18,8 @@ App::~App()
 
 Window *App::createWindow(std::string title, int width, int height)
 {
+    App::winWidth = width;
+    App::winHeight = width;
     Window *window = new Window(title, width, height);
     setWindow(window);
     return window;
@@ -46,7 +45,17 @@ const void App::loop()
     GLFWwindow *glfwWindow = this->currentWindow->glfwWindow;
     while (!glfwWindowShouldClose(glfwWindow))
     {
+        float currentFrame = static_cast<float>(glfwGetTime());
+        this->deltaTime = currentFrame - this->lastFrame;
+        this->lastFrame = currentFrame;
+
+        this->currentWindow->width = App::winWidth;
+        this->currentWindow->height = App::winHeight;
         this->onGlfwInput(glfwWindow);
+
+        glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         this->currentWindow->render();
         glfwSwapBuffers(glfwWindow);
         glfwPollEvents();
@@ -63,25 +72,35 @@ int App::exit() const
     return 0;
 }
 
-// 每当窗口大小发生变化（通过OS或用户调整大小）时，都会执行此回调函数
 void App::onGlfwResize(GLFWwindow *window, int width, int height)
 {
-    // 确保视口与新窗口尺寸匹配; 请注意宽度和
-    // 高度将远远大于视网膜显示器上指定的高度。
+    App::winWidth = width;
+    App::winHeight = width;
     glViewport(0, 0, width, height);
 }
 
-// glfw：点击esc退出，可是删掉这一块前面的东西还会报错，还是留着吧
 void App::onGlfwInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        this->currentWindow->currentScene->camera->ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        this->currentWindow->currentScene->camera->ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        this->currentWindow->currentScene->camera->ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        this->currentWindow->currentScene->camera->ProcessKeyboard(RIGHT, deltaTime);
 
     double mouseX, mouseY;
     glfwGetCursorPos(window, &mouseX, &mouseY);
 
     double worldX = (mouseX / this->currentWindow->width) * 2.0f - 1.0f;
     double worldY = (1 - mouseY / this->currentWindow->height) * 2.0f - 1.0f;
-    std::cout << "(" << worldX << "," << worldY << ")" << std::endl;
+    // std::cout << "(" << worldX << "," << worldY << ")" << std::endl;
     this->currentWindow->onMouseEvent(new MouseEvent{mouseX, mouseY, worldX, worldY});
 }
+
+int App::winWidth;
+int App::winHeight;
