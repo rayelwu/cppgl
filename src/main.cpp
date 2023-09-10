@@ -25,7 +25,6 @@ private:
     Shader *shader;
     Renderer *renderer;
     RawModel *model;
-    glm::vec3 lightPos;
     glm::mat4 world;
 
     glm::mat4 calculateTransform()
@@ -189,24 +188,21 @@ public:
         scaleZ = 1.0f;
 
         model = loadCubeModel();
-        lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
         world = glm::mat4(1.0f);
     }
 
     virtual void render() override
     {
         renderer->clear();
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         if (shader)
         {
             shader->Use();
         }
         shader->setUniform1f("alpha", sin(glfwGetTime()) / 2.0f + 0.5f);
         shader->setUniformMatrix4fv("world", world);
-        shader->setUniformMatrix4fv("view", camera->GetViewMatrix());
+        shader->setUniformMatrix4fv("view", calculateTransform());
         shader->setUniformMatrix4fv("projection", this->calculatePerspective());
-        shader->setUniform3f("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-        shader->setUniform3f("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-        shader->setUniform3f("lightPos", lightPos);
         renderer->render(this->model);
     }
 
@@ -215,10 +211,12 @@ public:
         transX = event->worldX;
         transY = event->worldY;
         transZ = -3.0f;
+        rotateX = (float)glfwGetTime();
+        rotateY = (float)glfwGetTime();
         rotateZ = (float)glfwGetTime();
-        scaleX = std::abs(std::sin(glm::radians((float)glfwGetTime() * 100)));
-        scaleY = std::abs(std::sin(glm::radians((float)glfwGetTime() * 100)));
-        scaleZ = std::abs(std::sin(glm::radians((float)glfwGetTime() * 100)));
+        //scaleX = std::abs(std::sin(glm::radians((float)glfwGetTime() * 100)));
+        //scaleY = std::abs(std::sin(glm::radians((float)glfwGetTime() * 100)));
+        //scaleZ = std::abs(std::sin(glm::radians((float)glfwGetTime() * 100)));
     };
 };
 

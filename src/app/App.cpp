@@ -98,7 +98,7 @@ void App::onGlfwInput(GLFWwindow *window)
 
     double worldX = (mouseX / this->currentWindow->width) * 2.0f - 1.0f;
     double worldY = (1 - mouseY / this->currentWindow->height) * 2.0f - 1.0f;
-    // std::cout << "(" << worldX << "," << worldY << ")" << std::endl;
+     //std::cout << "(" << worldX << "," << worldY << ")" << std::endl;
     this->currentWindow->onMouseEvent(new MouseEvent{mouseX, mouseY, worldX, worldY});
 }
 
